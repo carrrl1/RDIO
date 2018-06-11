@@ -17,8 +17,65 @@ Window {
         y: 0
         width: 192
         height: 768
-        color: "#7c5e3a"
+        color: "#584630"
         radius: 49
+
+    }
+
+    Item {
+        id: welcomeWindow
+        x: 197
+        y: 1
+        width: 1162
+        height: 767
+        visible: true
+
+        Text {
+            id: welcomeText
+            x: 164
+            y: 265
+            color: "#ffffff"
+            text: qsTr("Welcome")
+            horizontalAlignment: Text.AlignHCenter
+            font.pixelSize: 200
+        }
+    }
+
+    Item {
+        id: mp3Window
+        x: 204
+        y: 1
+        width: 1162
+        height: 767
+        visible: false
+
+        function clicked_visible(){
+            if (!visible) {
+                visible=true
+                radioWindow.visible=false
+                welcomeWindow.visible=false
+            }
+        }
+
+        Rectangle {
+            id: mp3Select
+            x: -185
+            y: 421
+            width: 159
+            height: 159
+            color: "#ffffff"
+            radius: 100
+        }
+
+        Image {
+            id: coverImg
+            x: 100
+            y: 239
+            width: 310
+            height: 290
+            fillMode: Image.PreserveAspectFit
+            source: "icn/compact-disc.svg"
+        }
 
     }
 
@@ -28,7 +85,7 @@ Window {
         y: 1
         width: 1162
         height: 767
-        visible: true
+        visible: false
 
         property real frequenc: 95.5
         function radio_forward(){
@@ -44,18 +101,24 @@ Window {
             }
         }
 
-        property bool clicked: false
         function clicked_visible(){
-            if (clicked) {
-                visible=false
-                clicked=false
-            }
-            else {
+            if (!visible) {
                 visible=true
-                clicked=true
+                mp3Window.visible=false
+                welcomeWindow.visible=false
             }
         }
 
+
+        Rectangle {
+            id: radioSelect
+            x: -185
+            y: 223
+            width: 159
+            height: 159
+            color: "#ffffff"
+            radius: 100
+        }
 
         Item {
             id: radioBackward
@@ -165,6 +228,7 @@ Window {
 
 
 
+
     }
 
     Item {
@@ -207,10 +271,10 @@ Window {
         height: 144
         Image {
             id: mp3Img
-            x: 0
-            y: 0
-            width: 144
-            height: 144
+            x: -14
+            y: -9
+            width: 170
+            height: 161
             anchors.verticalCenter: rdioMainWindow.verticalCenter
             anchors.horizontalCenter: rdioMainWindow.horizontalCenter
             anchors.verticalCenterOffset: -944
@@ -221,12 +285,17 @@ Window {
 
         MouseArea {
             id: mouseAreamp3Button
-            x: 0
+            x: -7
             y: 0
-            width: 142
-            height: 144
+            width: 158
+            height: 152
+            onClicked: mp3Window.clicked_visible()
         }
     }
+
+
+
+
 
 
 
