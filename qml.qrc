@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>icn/music-icon.png</file>
+        <file>icn/radio-icon.png</file>
+        <file>icn/fast_forward.png</file>
+        <file>icn/fast_backward.png</file>
     </qresource>
 </RCC>
