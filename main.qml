@@ -137,10 +137,18 @@ Window {
             }
 
             Image {
-                id: image
+                id: radioBackwardImg
                 width: 144
                 height: 144
                 source: "icn/fast_backward.png"
+                states: State {
+                    name: "pressed"
+                    when: mouseAreaBackward.pressed
+                    PropertyChanges { target: radioBackwardImg; scale: 0.8 }
+                }
+                transitions: Transition {
+                    NumberAnimation { properties: "scale"; duration: 100; easing.type: Easing.InOutQuad }
+                }
             }
         }
 
@@ -162,6 +170,14 @@ Window {
                 anchors.verticalCenterOffset: 195
                 fillMode: Image.PreserveAspectFit
                 source: "icn/fast_forward.png"
+                states: State {
+                    name: "pressed"
+                    when: mouseAreaForward.pressed
+                    PropertyChanges { target: radioImgForward; scale: 0.8 }
+                }
+                transitions: Transition {
+                    NumberAnimation { properties: "scale"; duration: 100; easing.type: Easing.InOutQuad }
+                }
             }
 
             MouseArea {
@@ -251,6 +267,15 @@ Window {
             anchors.verticalCenter: rdioMainWindow.verticalCenter
             anchors.horizontalCenter: rdioMainWindow.horizontalCenter
             source: "icn/radio-icon.png"
+
+            states: State {
+                name: "pressed"
+                when: mouseArearadioButton.pressed
+                PropertyChanges { target: radioImg; scale: 0.8 }
+            }
+            transitions: Transition {
+                NumberAnimation { properties: "scale"; duration: 100; easing.type: Easing.InOutQuad }
+            }
         }
 
         MouseArea {
@@ -281,6 +306,14 @@ Window {
             fillMode: Image.PreserveAspectFit
             anchors.horizontalCenterOffset: -1602
             source: "icn/music-icon.png"
+            states: State {
+                name: "pressed"
+                when: mouseAreamp3Button.pressed
+                PropertyChanges { target: mp3Img; scale: 0.8 }
+            }
+            transitions: Transition {
+                NumberAnimation { properties: "scale"; duration: 100; easing.type: Easing.InOutQuad }
+            }
         }
 
         MouseArea {
