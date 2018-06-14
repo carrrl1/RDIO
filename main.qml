@@ -1,6 +1,7 @@
 import QtQuick 2.6
 import QtQuick.Window 2.2
-import QtAudioEngine 1.1
+import QtMultimedia 5.0
+import Qt.labs.folderlistmodel 2.1
 
 Window {
     id: rdioMainWindow
@@ -22,6 +23,7 @@ Window {
 
     }
 
+
     Item {
         id: welcomeWindow
         x: 197
@@ -41,6 +43,7 @@ Window {
         }
     }
 
+
     Item {
         id: mp3Window
         x: 204
@@ -57,6 +60,91 @@ Window {
             }
         }
 
+        MediaPlayer {
+            id: player
+        }
+
+        Item {
+            id: playLogic
+
+            property int index: -1
+            property MediaPlayer mediaPlayer: player
+            property FolderListModel items: FolderListModel {
+                folder: "music"
+                nameFilters: ["*.mp3"]
+            }
+
+            function init(){
+                if(mediaPlayer.playbackState===1){
+                    mediaPlayer.pause();
+                }else if(mediaPlayer.playbackState===2){
+                    mediaPlayer.play();
+                }else{
+                    setIndex(0);
+                }
+            }
+
+            function setIndex(i)
+            {
+                index = i;
+
+                if (index < 0 || index >= items.count)
+                {
+                    index = -1;
+                    mediaPlayer.source = "";
+                }
+                else{
+                    mediaPlayer.source = items.get(index,"filePath");
+                    mediaPlayer.play();
+                }
+            }
+
+            function next(){
+                setIndex(index + 1);
+            }
+
+            function previous(){
+                setIndex(index - 1);
+            }
+
+            function msToTime(duration) {
+                var seconds = parseInt((duration/1000)%60);
+                var minutes = parseInt((duration/(1000*60))%60);
+
+                minutes = (minutes < 10) ? "0" + minutes : minutes;
+                seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+                return minutes + ":" + seconds;
+            }
+
+            Connections {
+                target: playLogic.mediaPlayer
+
+                onPaused: {
+                    mp3PlayPauseImg.source = "icn/mp3-play.svg";
+                }
+
+                onPlaying: {
+                    mp3PlayPauseImg.source = "icn/mp3-pause.svg";
+                }
+
+                onStopped: {
+                    mp3PlayPauseImg.source = "icn/mp3-play.svg";
+                    if (playLogic.mediaPlayer.status == MediaPlayer.EndOfMedia)
+                        playLogic.next();
+                }
+
+                onError: {
+                    console.log(error+" error string is "+errorString);
+                }
+
+                onMediaObjectChanged: {
+                    if (playLogic.mediaPlayer.mediaObject)
+                        playLogic.mediaPlayer.mediaObject.notifyInterval = 50;
+                }
+            }
+        }
+
         Rectangle {
             id: mp3Select
             x: -185
@@ -67,14 +155,217 @@ Window {
             radius: 100
         }
 
-        Image {
-            id: coverImg
-            x: 100
-            y: 239
-            width: 310
-            height: 290
-            fillMode: Image.PreserveAspectFit
-            source: "icn/compact-disc.svg"
+        Rectangle {
+            id: mp3menu
+            x: 84
+            y: 102
+            width: 981
+            height: 403
+            color: "#ffffff"
+            radius: 34
+            z: 1
+
+            Image {
+                id: coverImg
+                x: 20
+                y: 59
+                width: 310
+                height: 290
+                fillMode: Image.PreserveAspectFit
+                source: "icn/compact-disc.svg"
+            }
+
+            Text {
+                id: trackTitle
+                x: 357
+                y: 76
+                width: 637
+                height: 85
+                color: "#484747"
+                text: player.metaData.title ? player.metaData.title : "Song title unavailable"
+                font.family: "Tahoma"
+                font.pointSize: 45
+                font.bold: true
+                style: Text.Raised
+                styleColor: "#111111"
+                wrapMode: Text.Wrap
+            }
+
+            Text {
+                id: trackAlbum
+                x: 366
+                y: 250
+                width: 607
+                height: 30
+                color: "#081731"
+                text: player.metaData.albumTitle ? player.metaData.albumTitle : "Song title unavailable"
+                font.family: "Tahoma"
+                font.pointSize: 35
+                font.bold: true
+                style: Text.Raised
+                styleColor: "#111111"
+                wrapMode: Text.Wrap
+            }
+        }
+
+        Item {
+            id: mp3PlayPause
+            x: 488
+            y: 568
+            width: 174
+            height: 144
+            state: "none"
+
+            Image {
+                id: mp3PlayPauseImg
+                x: 0
+                y: 0
+                width: 144
+                height: 144
+                anchors.verticalCenterOffset: -944
+                anchors.horizontalCenterOffset: -1602
+                source: "icn/mp3-play.svg"
+                anchors.horizontalCenter: rdioMainWindow.horizontalCenter
+                anchors.verticalCenter: rdioMainWindow.verticalCenter
+                fillMode: Image.PreserveAspectFit
+
+                states: [
+                    State {
+                        name: "pressed"
+                        when: mouseAreamp3PlayPause.pressed
+                        PropertyChanges {
+                            target: mp3PlayPauseImg
+                            scale: 0.8
+                        }
+                    }]
+                transitions: [
+                    Transition {
+                        NumberAnimation {
+                            properties: "scale"
+                            easing.type: Easing.InOutQuad
+                            duration: 100
+                        }
+                    }]
+            }
+
+            MouseArea {
+                id: mouseAreamp3PlayPause
+                x: 0
+                y: 0
+                width: 144
+                height: 144
+
+                anchors.fill: parent
+                onClicked: playLogic.init();
+                onPressed: mp3PlayPause.state = "pressed"
+                onReleased: mp3PlayPause.state = "none"
+            }
+        }
+
+        Item {
+            id: mp3Forward
+            x: 799
+            y: 568
+            width: 174
+            height: 144
+            state: "none"
+
+            Image {
+                id: mp3ForwardImg
+                x: 0
+                y: 0
+                width: 144
+                height: 144
+                anchors.verticalCenterOffset: -944
+                anchors.horizontalCenterOffset: -1602
+                fillMode: Image.PreserveAspectFit
+                source: "icn/mp3-fast-forward.svg"
+                anchors.horizontalCenter: rdioMainWindow.horizontalCenter
+                anchors.verticalCenter: rdioMainWindow.verticalCenter
+                states: [
+                    State {
+                        name: "pressed"
+                        when: mouseAreamp3Forward.pressed
+                        PropertyChanges {
+                            target: mp3ForwardImg
+                            scale: 0.8
+                        }
+                    }]
+                transitions: [
+                    Transition {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.InOutQuad
+                            properties: "scale"
+                        }
+                    }]
+            }
+
+            MouseArea {
+                id: mouseAreamp3Forward
+                x: 0
+                y: 0
+                width: 144
+                height: 144
+
+                anchors.fill: parent
+                onClicked: playLogic.next()
+                onPressed: mp3Forward.state = "pressed"
+                onReleased: mp3Forward.state = "none"
+            }
+        }
+
+        Item {
+            id: mp3Backward
+            x: 175
+            y: 568
+            width: 174
+            height: 144
+            state: "none"
+
+            Image {
+                id: mp3BackwardImg
+                x: 0
+                y: 0
+                width: 144
+                height: 144
+                anchors.verticalCenterOffset: -944
+                fillMode: Image.PreserveAspectFit
+                anchors.horizontalCenterOffset: -1602
+                source: "icn/mp3-fast-backward.svg"
+                anchors.verticalCenter: rdioMainWindow.verticalCenter
+                anchors.horizontalCenter: rdioMainWindow.horizontalCenter
+                states: [
+                    State {
+                        name: "pressed"
+                        when: mouseAreamp3Backward.pressed
+                        PropertyChanges {
+                            target: mp3BackwardImg
+                            scale: 0.8
+                        }
+                    }]
+                transitions: [
+                    Transition {
+                        NumberAnimation {
+                            duration: 100
+                            easing.type: Easing.InOutQuad
+                            properties: "scale"
+                        }
+                    }]
+            }
+
+            MouseArea {
+                id: mouseAreamp3Backward
+                x: 0
+                y: 0
+                width: 144
+                height: 144
+
+                anchors.fill: parent
+                onClicked: playLogic.previous()
+                onPressed: mp3Backward.state = "pressed"
+                onReleased: mp3Backward.state = "none"
+            }
         }
 
     }
@@ -288,6 +579,7 @@ Window {
         }
     }
 
+
     Item {
         id: mp3Button
         x: 27
@@ -325,6 +617,9 @@ Window {
             onClicked: mp3Window.clicked_visible()
         }
     }
+
+
+
 
 
 
