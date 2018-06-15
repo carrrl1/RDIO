@@ -50,7 +50,7 @@ Window {
         y: 1
         width: 1162
         height: 767
-        visible: false
+        visible: true
 
         function clicked_visible(){
             if (!visible) {
@@ -70,7 +70,8 @@ Window {
             property int index: -1
             property MediaPlayer mediaPlayer: player
             property FolderListModel items: FolderListModel {
-                folder: "music"
+                //Change this folder to music folder realpath
+                folder: "file:///Users/charlie/Documents/git/RDIO/music"
                 nameFilters: ["*.mp3"]
             }
 
@@ -92,11 +93,13 @@ Window {
                 {
                     index = -1;
                     mediaPlayer.source = "";
+                    console.log("Error playing file no items");
                 }
                 else{
-                    mediaPlayer.source = items.get(index,"filePath");
+                    mediaPlayer.source = items.get(index,"fileURL");
+                    console.log(items.get(index,"fileURL"));
                     mediaPlayer.play();
-                }
+                }                
             }
 
             function next(){
@@ -179,8 +182,8 @@ Window {
                 id: trackTitle
                 x: 357
                 y: 76
-                width: 637
-                height: 85
+                width: 611
+                height: 67
                 color: "#484747"
                 text: player.metaData.title ? player.metaData.title : "Song title unavailable"
                 font.family: "Tahoma"
@@ -192,13 +195,13 @@ Window {
             }
 
             Text {
-                id: trackAlbum
-                x: 366
-                y: 250
-                width: 607
-                height: 30
+                id: trackArtist
+                x: 357
+                y: 149
+                width: 611
+                height: 54
                 color: "#081731"
-                text: player.metaData.albumTitle ? player.metaData.albumTitle : "Song title unavailable"
+                text: player.metaData.albumTitle ? player.metaData.albumTitle : "Song album title unavailable"
                 font.family: "Tahoma"
                 font.pointSize: 35
                 font.bold: true
@@ -257,6 +260,7 @@ Window {
 
                 anchors.fill: parent
                 onClicked: playLogic.init();
+                //onClicked: player.play();
                 onPressed: mp3PlayPause.state = "pressed"
                 onReleased: mp3PlayPause.state = "none"
             }
