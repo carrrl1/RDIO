@@ -12,5 +12,6 @@
         <file>icn/mp3-play.svg</file>
         <file>icn/music-icon.png</file>
         <file>icn/radio-icon.png</file>
+        <file>icn/mp3-stop.svg</file>
     </qresource>
 </RCC>

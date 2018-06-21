@@ -6,6 +6,7 @@ import Qt.labs.folderlistmodel 2.1
 Window {
     id: rdioMainWindow
     visible: true
+    visibility: "FullScreen"
     width: 1366
     height: 768
     color: "#072041"
@@ -75,13 +76,19 @@ Window {
                 nameFilters: ["*.mp3"]
             }
 
-            function init(){
+            function play_pause_method(){
                 if(mediaPlayer.playbackState===1){
                     mediaPlayer.pause();
                 }else if(mediaPlayer.playbackState===2){
                     mediaPlayer.play();
                 }else{
                     setIndex(0);
+                }
+            }
+
+            function stop_method(){
+                if(mediaPlayer.playbackState===1){
+                    mediaPlayer.stop();
                 }
             }
 
@@ -211,9 +218,10 @@ Window {
             }
         }
 
+
         Item {
             id: mp3PlayPause
-            x: 488
+            x: 592
             y: 568
             width: 174
             height: 144
@@ -259,7 +267,7 @@ Window {
                 height: 144
 
                 anchors.fill: parent
-                onClicked: playLogic.init();
+                onClicked: playLogic.play_pause_method();
                 //onClicked: player.play();
                 onPressed: mp3PlayPause.state = "pressed"
                 onReleased: mp3PlayPause.state = "none"
@@ -267,10 +275,66 @@ Window {
         }
 
         Item {
+            id: mp3Stop
+            x: 387
+            y: 580
+            width: 154
+            height: 120
+            state: "none"
+
+            Image {
+                id: mp3StopImg
+                x: 0
+                y: 0
+                width: 120
+                height: 120
+                source: "icn/mp3-stop.svg"
+                anchors.verticalCenter: rdioMainWindow.verticalCenter
+                anchors.horizontalCenter: rdioMainWindow.horizontalCenter
+                anchors.horizontalCenterOffset: -1602
+                fillMode: Image.PreserveAspectFit
+                anchors.verticalCenterOffset: -944
+                states: [
+                    State {
+                        name: "pressed"
+                        when: mouseAreamp3Stop.pressed
+                        PropertyChanges {
+                            target: mp3StopImg
+                            scale: 0.8
+                        }
+                    }]
+                transitions: [
+                    Transition {
+                        NumberAnimation {
+                            properties: "scale"
+                            duration: 100
+                            easing.type: Easing.InOutQuad
+                        }
+                    }]
+            }
+
+            MouseArea {
+                id: mouseAreamp3Stop
+                x: 0
+                y: 0
+                width: 120
+                height: 120
+                anchors.rightMargin: 54
+                anchors.bottomMargin: 24
+
+                anchors.fill: parent
+                onClicked: playLogic.stop_method();
+                onPressed: mp3Stop.state = "pressed"
+                onReleased: mp3Stop.state = "none"
+            }
+
+        }
+
+        Item {
             id: mp3Forward
             x: 799
             y: 568
-            width: 174
+            width: 154
             height: 144
             state: "none"
 
@@ -371,6 +435,7 @@ Window {
                 onReleased: mp3Backward.state = "none"
             }
         }
+
 
     }
 
@@ -579,7 +644,10 @@ Window {
             y: 0
             width: 144
             height: 144
-            onClicked: radioWindow.clicked_visible()
+            onClicked: {
+                playLogic.stop_method()
+                radioWindow.clicked_visible()
+            }
         }
     }
 
