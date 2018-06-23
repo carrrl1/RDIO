@@ -7,7 +7,7 @@ Window {
     id: rdioMainWindow
     visible: true
     visibility: "FullScreen"
-    width: 1366
+    width: 1024
     height: 768
     color: "#072041"
     title: qsTr("RDIO")
@@ -29,14 +29,14 @@ Window {
         id: welcomeWindow
         x: 197
         y: 1
-        width: 1162
+        width: 827
         height: 767
         visible: true
 
         Text {
             id: welcomeText
-            x: 164
-            y: 265
+            x: 15
+            y: 266
             color: "#ffffff"
             text: qsTr("Welcome")
             horizontalAlignment: Text.AlignHCenter
@@ -49,9 +49,9 @@ Window {
         id: mp3Window
         x: 204
         y: 1
-        width: 1162
+        width: 820
         height: 767
-        visible: true
+        visible: false
 
         function clicked_visible(){
             if (!visible) {
@@ -163,34 +163,36 @@ Window {
             height: 159
             color: "#ffffff"
             radius: 100
+            visible: true
         }
 
         Rectangle {
             id: mp3menu
-            x: 84
-            y: 102
-            width: 981
-            height: 403
+            x: 32
+            y: 75
+            width: 768
+            height: 436
             color: "#ffffff"
             radius: 34
+            visible: true
             z: 1
 
             Image {
                 id: coverImg
                 x: 20
-                y: 59
-                width: 310
-                height: 290
+                y: 68
+                width: 238
+                height: 300
                 fillMode: Image.PreserveAspectFit
                 source: "icn/compact-disc.svg"
             }
 
             Text {
                 id: trackTitle
-                x: 357
-                y: 76
-                width: 611
-                height: 67
+                x: 275
+                y: 104
+                width: 485
+                height: 80
                 color: "#484747"
                 text: player.metaData.title ? player.metaData.title : "Song title unavailable"
                 font.family: "Tahoma"
@@ -203,9 +205,9 @@ Window {
 
             Text {
                 id: trackArtist
-                x: 357
-                y: 149
-                width: 611
+                x: 278
+                y: 226
+                width: 479
                 height: 54
                 color: "#081731"
                 text: player.metaData.albumTitle ? player.metaData.albumTitle : "Song album title unavailable"
@@ -221,7 +223,7 @@ Window {
 
         Item {
             id: mp3PlayPause
-            x: 592
+            x: 426
             y: 568
             width: 174
             height: 144
@@ -276,7 +278,7 @@ Window {
 
         Item {
             id: mp3Stop
-            x: 387
+            x: 231
             y: 580
             width: 154
             height: 120
@@ -332,7 +334,7 @@ Window {
 
         Item {
             id: mp3Forward
-            x: 799
+            x: 629
             y: 568
             width: 154
             height: 144
@@ -385,7 +387,7 @@ Window {
 
         Item {
             id: mp3Backward
-            x: 175
+            x: 32
             y: 568
             width: 174
             height: 144
@@ -443,7 +445,7 @@ Window {
         id: radioWindow
         x: 204
         y: 1
-        width: 1162
+        width: 820
         height: 767
         visible: false
 
@@ -473,7 +475,7 @@ Window {
         Rectangle {
             id: radioSelect
             x: -185
-            y: 223
+            y: 193
             width: 159
             height: 159
             color: "#ffffff"
@@ -482,10 +484,11 @@ Window {
 
         Item {
             id: radioBackward
-            x: 149
+            x: 99
             y: 589
             width: 174
             height: 144
+            visible: true
 
             MouseArea {
                 id: mouseAreaBackward
@@ -514,7 +517,7 @@ Window {
 
         Item {
             id: radioForward
-            x: 806
+            x: 564
             y: 589
             width: 174
             height: 144
@@ -542,7 +545,7 @@ Window {
 
             MouseArea {
                 id: mouseAreaForward
-                x: 0
+                x: -6
                 y: 0
                 width: 144
                 height: 144
@@ -552,17 +555,17 @@ Window {
 
         Item {
             id: radioFrec
-            x: 130
-            y: 183
-            width: 860
-            height: 378
+            x: 42
+            y: 185
+            width: 756
+            height: 356
 
             Rectangle {
                 id: greyR
                 x: -20
                 y: -23
-                width: 890
-                height: 378
+                width: 772
+                height: 369
                 color: "#6a6868"
                 radius: 25
             }
@@ -571,8 +574,8 @@ Window {
                 id: whiteR
                 x: 0
                 y: 0
-                width: 850
-                height: 332
+                width: 732
+                height: 320
                 color: "#ffffff"
                 radius: 5
             }
@@ -589,8 +592,8 @@ Window {
 
             Text {
                 id: mhz
-                x: 614
-                y: 191
+                x: 518
+                y: 187
                 color: "#4f3939"
                 text: "MHz"
                 horizontalAlignment: Text.AlignHCenter
@@ -610,7 +613,7 @@ Window {
     Item {
         id: radioButton
         x: 27
-        y: 232
+        y: 202
         width: 174
         height: 144
 
